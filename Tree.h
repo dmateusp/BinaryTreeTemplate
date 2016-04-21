@@ -37,6 +37,9 @@ private:
 
 	bool find(Node<T>* node, T &data);
 
+	bool deleteNode(Node<T>* &node, T data);
+	T findMinimum(Node<T>* node); // USED IN DELETE
+
 	// RECURSIVE DESTRUCTOR
 	// it is basically a post order that deletes nodes
 	void clean(Node<T>* &node);
@@ -54,6 +57,9 @@ public:
 
 	//-- FIND A NODE --
 	bool find(T data);
+
+	//-- DELETE A NODE --
+	bool deleteNode(T data);
 };
 
 //-- NODE --
@@ -106,6 +112,10 @@ void Tree<T>::postorder() {
 template <class T>
 bool Tree<T>::find(T data) {
 	return find(m_root, data);
+}
+template <class T>
+bool Tree<T>::deleteNode(T data) {
+	return deleteNode(m_root, data);
 }
 
 //-- RECURSION --
@@ -171,4 +181,38 @@ void Tree<T>::clean(Node<T>* &node) {
 		clean(node->right);
 
 	delete node; // ROOT
+}
+template <class T>
+T Tree<T>::findMinimum(Node<T>* node) {
+	if (node->isLeaf())
+		return node->data;
+
+	return node->left ? findMinimum(node->left) : findMinimum(node->right);
+}
+template <class T>
+bool Tree<T>::deleteNode(Node<T>* &node, T data) {
+	if (!node)
+		return false;
+	else {
+		if (node->data == data) { // WE FOUND THE NODE
+			if (node->isLeaf()) { // IF LEAF
+				delete node;
+				node = nullptr;
+			} else {
+				if (node->left && node->right) { // 2 CHILDREN
+					T dataReplace = findMinimum(node->right);
+					deleteNode(dataReplace);
+					node->data = dataReplace;
+				}
+				else {
+					Node<T>* tempPtr; // 1 CHILD
+					node->left ? tempPtr = node->left : tempPtr = node->right;
+					delete node;
+					node = tempPtr;
+				}
+			}
+			return true;
+		}
+		return deleteNode(node->left, data) || deleteNode(node->right, data);
+	}
 }

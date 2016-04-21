@@ -66,6 +66,12 @@ int main() {
 	myTreeCustom.find(VideoGame("CounterStrike", 5)) ? std::cout << "Found" << std::endl : std::cout << "Not in tree" << std::endl; // NOT IN TREE
 	myTreeCustom.find(VideoGame("WoW", 10)) ? std::cout << "Found" << std::endl : std::cout << "Not in tree" << std::endl; // FOUND
 
+	// TEST DELETE
+	//myTreeCustom.deleteNode(VideoGame("Pokemon", 1)); // DELETES A LEAF
+	//myTreeCustom.deleteNode(VideoGame("DarkSouls", 1)); // DELETES A NODE WITH 1 CHILD
+	myTreeCustom.deleteNode(VideoGame("WoW", 1)); // DELETES A NODE WITH 2 CHILDREN
+	myTreeCustom.preorder();
+
 	system("pause");
 	return 0;
 }
